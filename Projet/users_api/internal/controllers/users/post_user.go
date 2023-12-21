@@ -8,16 +8,28 @@ import (
 	"middleware/example/internal/models"
 	"middleware/example/internal/services/users"
 )
-
+type RequestBody struct {
+	Username   string `json:"username"`
+	Email      string `json:"email"`
+	Premium    bool   `json:"premium"`
+	Birthdate  string `json:"birthdate"`
+	Country    string `json:"country"`
+	// Add other necessary fields
+}
+// CreateUser creates a new user.
+// Assumes that the User model structure is defined.
+// @Tags         users
+// @Summary      Create a new user.
+// @Description  Creates a new user with provided details.
+// @Accept       json
+// @Produce      json
+// @Param        requestBody   body     RequestBody   true  "User details"
+// @Success      201           {object}       models.User
+// @Failure      400           "Bad Request"
+// @Failure      500           "Internal Server Error"
+// @Router       /users [post]
 func CreateUser(w http.ResponseWriter, r *http.Request) {
-	type RequestBody struct {
-		Username   string `json:"username"`
-		Email      string `json:"email"`
-		Premium    bool   `json:"premium"`
-		Birthdate  string `json:"birthdate"`
-		Country    string `json:"country"`
-		// Add other necessary fields
-	}
+
 
 	var requestBody RequestBody
 	err := json.NewDecoder(r.Body).Decode(&requestBody)

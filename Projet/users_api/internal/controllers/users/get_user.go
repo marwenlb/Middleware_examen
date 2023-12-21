@@ -11,6 +11,14 @@ import (
 
 // GetUser retrieves a user by ID.
 // Assumes that the User model structure is defined.
+// @Tags         users
+// @Summary      Get a user by ID.
+// @Description  Retrieve a user by ID.
+// @Param        userId       path      string  true  "User UUID formatted ID"
+// @Success      200          {object}  models.User
+// @Failure      404          "User not found"
+// @Failure      500          "Internal Server Error"
+// @Router       /users/{userId} [get]s
 func GetUser(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	userID, _ := ctx.Value("userId").(uuid.UUID)
