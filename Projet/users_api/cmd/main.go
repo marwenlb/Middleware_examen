@@ -40,6 +40,8 @@ func init() {
 		`CREATE TABLE IF NOT EXISTS users (
 			id UUID PRIMARY KEY NOT NULL,
 			username VARCHAR(255) NOT NULL,
+			password VARCHAR(255) NOT NULL,
+			name VARCHAR(255) NOT NULL,
 			email VARCHAR(255) NOT NULL,
 			premium BOOLEAN NOT NULL,
 			birthdate DATE NOT NULL,

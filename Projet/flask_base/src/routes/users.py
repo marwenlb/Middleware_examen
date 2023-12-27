@@ -11,6 +11,38 @@ import src.services.users as users_service
 # from routes import users
 users = Blueprint(name="users", import_name=__name__)
 
+@users.route('/', methods=['GET'])
+@login_required
+def get_all_users():
+    """
+    ---
+    get:
+      description: Getting all users
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema: 
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+            application/yaml:
+              schema: 
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: Unauthorized
+            application/yaml:
+              schema: Unauthorized
+      tags:
+          - users
+    """
+    return users_service.get_all_users()
 
 @users.route('/<id>', methods=['GET'])
 @login_required
