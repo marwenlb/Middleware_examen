@@ -11,3 +11,12 @@ def add_song(song):
     db.session.add(song)
     db.session.commit()
 
+def update_song(song):
+    existing_song = get_song_from_id(song.id)
+    existing_song.titre = song.titre
+    existing_user.artiste = song.artiste
+    existing_song.description = song.description
+    existing_user.duree = song.duree
+    existing_song.release_date = song.release_date
+    db.session.commit()
+

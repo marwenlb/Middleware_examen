@@ -5,6 +5,7 @@ from marshmallow import ValidationError
 from src.models.http_exceptions import *
 from src.schemas.songs import SongSchema
 from src.schemas.errors import *
+from src.schemas.songs import SongUpdateSchema
 import src.services.songs as song_service
 
 
@@ -40,7 +41,32 @@ def create_song():
         error = UnprocessableEntitySchema().loads(json.dumps({"message": "One required field was empty"}))
         return error, error.get("code")
     except Forbidden:
-        error = ForbiddenSchema().loads(json.dumps({"message": "Can't manage other users"}))
+        error = ForbiddenSchema().loads(json.dumps({"message": "Can't manage other songs"}))
+        return error, error.get("code")
+    except Exception:
+        error = SomethingWentWrongSchema().loads("{}")
+        return error, error.get("code")
+
+@songs.route('/<id>', methods=['PUT'])
+def put_song(id):
+    
+    # parser le body
+    try:
+        song_update = SongUpdateSchema().loads(json_data=request.data.decode('utf-8'))
+    except ValidationError as e:
+        error = UnprocessableEntitySchema().loads(json.dumps({"message": e.messages.__str__()}))
+        return error, error.get("code")
+
+    try:
+        return song_service.put_song(id, song_update)
+    except Conflict:
+        error = ConflictSchema().loads(json.dumps({"message": "Song already exists"}))
+        return error, error.get("code")
+    except UnprocessableEntity:
+        error = UnprocessableEntitySchema().loads(json.dumps({"message": "One required field was empty"}))
+        return error, error.get("code")
+    except Forbidden:
+        error = ForbiddenSchema().loads(json.dumps({"message": "Can't manage other songs"}))
         return error, error.get("code")
     except Exception:
         error = SomethingWentWrongSchema().loads("{}")

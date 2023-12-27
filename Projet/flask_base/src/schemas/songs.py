@@ -22,7 +22,7 @@ class BaseSongSchema(Schema):
     artiste = fields.String(description="Nom Artiste ", required=True)
     description = fields.String(description="Description")
     duree = fields.String(description="Duree")
-    release_date = fields.Date(description="Release Date")
+    release_date = fields.String(description="Release Date")
 
 class SongUpdateSchema(BaseSongSchema):
     @validates_schema

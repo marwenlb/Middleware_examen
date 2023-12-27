@@ -17,6 +17,14 @@ class Song(db.Model):
         self.description = description
         self.duree = duree
         self.release_date = release_date
+    
+    def is_empty(self):
+        return (not self.id or self.id == "") and \
+               (not self.titre or self.titre == "") and \
+               (not self.artiste or self.artiste == "") and \
+               (not self.description or self.description == "") and \
+               (not self.duree or self.duree == "") and \
+               (not self.release_date or self.release_date == "")
 
     @staticmethod
     def from_dict(obj):
