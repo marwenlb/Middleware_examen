@@ -27,3 +27,5 @@ class User(UserMixin, db.Model):
         username = obj.get("username") if obj.get("username") != "" else None
         password = generate_password_hash(obj.get("password")) if obj.get("password") != "" else None
         return User(None, username, password)
+
+    
