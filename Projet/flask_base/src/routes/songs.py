@@ -17,6 +17,11 @@ def get_songs():
     # Utiliser SongSchema(many=True).dump avec songs_data
     return jsonify(SongSchema(many=True).dump(songs_data)), status_code
 
+@songs.route('/<id>', methods=['GET'])
+def get_song(id):
+    return song_service.get_song(id)
+
+
 @songs.route('/', methods=['POST'])
 def create_song():
     # parser le body
@@ -29,7 +34,7 @@ def create_song():
     try:
         return song_service.create_song(song_ajout)
     except Conflict:
-        error = ConflictSchema().loads(json.dumps({"message": "User already exists"}))
+        error = ConflictSchema().loads(json.dumps({"message": "Song already exists"}))
         return error, error.get("code")
     except UnprocessableEntity:
         error = UnprocessableEntitySchema().loads(json.dumps({"message": "One required field was empty"}))
@@ -41,4 +46,3 @@ def create_song():
         error = SomethingWentWrongSchema().loads("{}")
         return error, error.get("code")
 
- 

@@ -16,6 +16,11 @@ def get_all_songs():
     response = requests.request(method="GET", url=songs_url)
     return response.json(), response.status_code
 
+def get_song(id):
+    response = requests.request(method="GET", url=songs_url+id)
+    return response.json(), response.status_code
+
+
 def create_song(songs_register):
     # on récupère le modèle utilisateur pour la BDD
     song_model = SongModel.from_dict(songs_register)
