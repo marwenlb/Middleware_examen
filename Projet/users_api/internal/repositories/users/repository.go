@@ -20,7 +20,7 @@ func GetAllUsers() ([]models.User, error) {
 	users := []models.User{}
 	for rows.Next() {
 		var user models.User
-		err = rows.Scan(&user.Id, &user.Username, &user.Email, &user.Premium, &user.Birthdate, &user.Country)
+		err = rows.Scan(&user.Id, &user.Username, &user.Password, &user.Name,&user.Email, &user.Premium, &user.Birthdate, &user.Country)
 		if err != nil {
 			return nil, err
 		}
@@ -40,7 +40,7 @@ func GetUserByID(id uuid.UUID) (*models.User, error) {
 	helpers.CloseDB(db)
 
 	var user models.User
-	err = row.Scan(&user.Id, &user.Username, &user.Email, &user.Premium, &user.Birthdate, &user.Country)
+	err = row.Scan(&user.Id, &user.Username, &user.Password, &user.Name, &user.Email, &user.Premium, &user.Birthdate, &user.Country)
 	if err != nil {
 		return nil, err
 	}
@@ -54,8 +54,8 @@ func CreateUser(user models.User) error {
 	}
 	defer helpers.CloseDB(db)
 
-	_, err = db.Exec("INSERT INTO users (id, username, email, premium, birthdate, country) VALUES (?, ?, ?, ?, ?, ?)",
-		user.Id.String(), user.Username, user.Email, user.Premium, user.Birthdate, user.Country)
+	_, err = db.Exec("INSERT INTO users (id, username, password, name, email, premium, birthdate, country) VALUES (?, ?, ?, ?, ?, ?,? ,?)",
+	user.Id.String(), user.Username, user.Password, user.Name, user.Email, user.Premium, user.Birthdate, user.Country)
 	if err != nil {
 		return err
 	}
@@ -69,8 +69,8 @@ func UpdateUser(user models.User) error {
 	}
 	defer helpers.CloseDB(db)
 
-	_, err = db.Exec("UPDATE users SET username=?, email=?, premium=?, birthdate=?, country=? WHERE id=?",
-		user.Username, user.Email, user.Premium, user.Birthdate, user.Country, user.Id.String())
+	_, err = db.Exec("UPDATE users SET username=?, password=?, name=? ,email=?, premium=?, birthdate=?, country=? WHERE id=?",
+	user.Username,user.Password,user.Name, user.Email, user.Premium, user.Birthdate, user.Country, user.Id.String())
 	if err != nil {
 		return err
 	}

@@ -30,6 +30,15 @@ type RequestBody struct {
 // @Router       /users [post]
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 
+	type RequestBody struct {
+		Username   string `json:"username"`
+		Password string 	`json:"password"`
+		Name     string 	`json:"name"`
+		Email      string `json:"email"`
+		Premium    bool   `json:"premium"`
+		Birthdate  string `json:"birthdate"`
+		Country    string `json:"country"`
+	}
 
 	var requestBody RequestBody
 	err := json.NewDecoder(r.Body).Decode(&requestBody)
@@ -51,6 +60,8 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	newUser := models.User{
 		Id:        &uuidCreated,
 		Username:  requestBody.Username,
+		Password:  requestBody.Password,
+		Name:  	   requestBody.Name,
 		Email:     requestBody.Email,
 		Premium:   requestBody.Premium,
 		Birthdate: requestBody.Birthdate,
