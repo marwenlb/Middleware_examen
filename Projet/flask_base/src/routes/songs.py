@@ -72,3 +72,15 @@ def put_song(id):
         error = SomethingWentWrongSchema().loads("{}")
         return error, error.get("code")
 
+@songs.route('/<id>', methods=['DELETE'])
+def delete_song(id):
+    try:
+        success = song_service.delete_song(id)
+        if success:
+            return jsonify({"message": "Song deleted successfully"}), 200
+        else:
+            return jsonify({"message": "Song not found"}), 404
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return jsonify({"message": "Internal Server Error"}), 500
+

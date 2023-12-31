@@ -77,12 +77,26 @@ def put_song(id, song_update):
 
     return (response.json(), response.status_code) if response else get_song(id)
 
+def delete_song(id):
+    response = requests.request(method="DELETE", url=songs_url + id)
+    
+    if response.status_code == 204:
+        return {"message": "Song deleted successfully"}, 200
+    elif response.status_code == 404:
+        return {"message": "Song not found"}, 404
+    else:
+        try:
+            data = response.json()
+            return data, response.status_code
+        except json.JSONDecodeError:
+            return {"message": "Invalid JSON received from Golang server"}, 500
+
 
 
 
 def get_song_from_db(self, song_id):
-    return self.song_repository.get_song(song_id)
+    return self.songs_repository.get_song(song_id)
 
 def song_exists(self, song_id):
-    return self.get_song_from_db(song_id) is not None
+    return self.get_song_from_db(song_id) is not None 
 

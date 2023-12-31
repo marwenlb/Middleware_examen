@@ -20,3 +20,12 @@ def update_song(song):
     existing_song.release_date = song.release_date
     db.session.commit()
 
+def delete_song(id):
+    song = get_song_from_id(id)
+    if song:
+        db.session.delete(song)
+        db.session.commit()
+        return True
+    return False
+
+ 
