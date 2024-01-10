@@ -1,5 +1,7 @@
 from flask import Blueprint, jsonify, request
 import requests
+from src.models.songs import Song
+import src.routes.songs as song_routes
 
 ratings_app = Blueprint('ratings_app', __name__)
 
@@ -11,6 +13,9 @@ BASE_URL = 'https://ratings-foxtrot.edu.forestier.re'
 def get_song_ratings(song_id):
     ratings_url = f'{BASE_URL}/songs/{song_id}/ratings'
 
+    song = song_routes.get_song(song_id)  
+    if song is None:
+        return jsonify({'error': 'Song not found'}), 404
     try:
         response = requests.get(ratings_url)
         if response.status_code == 200:
