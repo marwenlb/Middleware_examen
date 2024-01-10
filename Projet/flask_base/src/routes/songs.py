@@ -1,5 +1,6 @@
 import json
 from flask import Blueprint, request, jsonify
+from flask_login import login_required
 from marshmallow import ValidationError
 
 from src.models.http_exceptions import *
@@ -21,6 +22,7 @@ def get_song(id):
     return song_service.get_song(id)
 
 @songs.route('/', methods=['POST'])
+@login_required
 def create_song():
     try:
         song_ajout = SongSchema().load(request.get_json())
@@ -36,6 +38,7 @@ def create_song():
         return error, error.get("code")
 
 @songs.route('/<id>', methods=['PUT'])
+@login_required
 def put_song(id):
     try:
         song_update = SongUpdateSchema().load(request.get_json())
@@ -51,6 +54,7 @@ def put_song(id):
         return error, error.get("code")
 
 @songs.route('/<id>', methods=['DELETE'])
+@login_required
 def delete_song(id):
     try:
         return song_service.delete_song(id)

@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+from flask_login import current_user, login_required
 import requests
 from src.models.songs import Song
 import src.routes.songs as song_routes
@@ -28,6 +29,7 @@ def get_song_ratings(song_id):
         return jsonify({'error': f'Request Exception: {str(e)}'}), 500
 
 @ratings_app.route('/songs/<song_id>/ratings', methods=['POST'])
+@login_required
 def add_song_rating(song_id):
     ratings_url = f'{BASE_URL}/songs/{song_id}/ratings'
 
@@ -60,12 +62,17 @@ def get_specific_rating(song_id, rating_id):
         return jsonify({'error': f'Request Exception: {str(e)}'}), 500
 
 @ratings_app.route('/songs/<song_id>/ratings/<rating_id>', methods=['PUT'])
+@login_required
 def update_rating(song_id, rating_id):
     rating_url = f'{BASE_URL}/songs/{song_id}/ratings/{rating_id}'
-
-    try:
+    
+    try:          
         data = request.json
-        
+        if current_user.id != data["user_id"]:
+            print(current_user) 
+            print(data["user_id"])
+            return jsonify({'error': 'not authorized'}), 401
+
         response = requests.put(rating_url, json=data)
         if response.status_code == 200:
             updated_rating = response.json()
@@ -77,10 +84,18 @@ def update_rating(song_id, rating_id):
         return jsonify({'error': f'Request Exception: {str(e)}'}), 500
 
 @ratings_app.route('/songs/<song_id>/ratings/<rating_id>', methods=['DELETE'])
+@login_required
 def delete_rating(song_id, rating_id):
     rating_url = f'{BASE_URL}/songs/{song_id}/ratings/{rating_id}'
 
     try:
+        data = request.json
+        print(current_user) 
+        print(data["user_id"])
+        if current_user.id != data["user_id"]:
+            print(current_user) 
+            print(data["user_id"])
+            return jsonify({'error': 'not authorized'}), 401
         response = requests.delete(rating_url)
         if response.status_code == 204:  # 204 for No Content
             return '', 204
