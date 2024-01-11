@@ -8,7 +8,7 @@
     <div class="row" style="margin: 0">
       <div v-for="song in songs.value" v-bind:key="song.id" class="col-sm-4" style="padding: 10px">
         <div class=" card" style="margin: 10px 0">
-          <h3 class="card-header">{{ song.title }} - {{ song.artist }} |
+          <h3 class="card-header">{{ song.titre }} - {{ song.artiste }} |
             {{ avg(song.ratings.map(e => e.rating)).toFixed(2) }}/5
             <span class="fas fa-star" style="color: #ffff00"/></h3>
           <div class="card-body">
@@ -42,8 +42,8 @@
           <div class="card-footer text-muted">
             <div style="display: flex; justify-content: space-between">
               <div> Published on {{ song.published_date }}
-                <span style="font-style: italic; padding-left: 20px; color: #aaa">(Filename : {{
-                    song.file_name
+                <span style="font-style: italic; padding-left: 20px; color: #aaa">(description : {{
+                    song.description
                   }})</span></div>
               <div>
                 <span class="fas fa-times" style="cursor: pointer; color: #ff0000" v-on:click="deleteSong(song)"/>
@@ -59,11 +59,11 @@
 
     <div style="margin: 20px; margin-bottom: 100px">
       <form class="form" v-on:submit.prevent="addSongToAPI()">
-        <input class="form-control" type="text" placeholder="Music title" v-model="addSong.title">
+        <input class="form-control" type="text" placeholder="Music title" v-model="addSong.titre">
         <br />
-        <input class="form-control" type="text" placeholder="Artist name" v-model="addSong.artist">
+        <input class="form-control" type="text" placeholder="Artist name" v-model="addSong.artiste">
         <br />
-        <input class="form-control" type="text" placeholder="File name" v-model="addSong.file_name">
+        <input class="form-control" type="text" placeholder="description" v-model="addSong.description">
         <br />
         <button type="submit" class="btn btn-primary">Add music ></button>
       </form>
@@ -90,9 +90,9 @@ const {currentUser} = storeToRefs(authStore)
 
 const songs = reactive({})
 const addSong = reactive({
-  title: "",
-  file_name: "",
-  artist: ""
+  titre: "",
+  description: "",
+  artiste: ""
 })
 
 const generalResponses = useGeneralResponses()
@@ -109,9 +109,9 @@ function avg(d) {
 
 async function addSongToAPI() {
   let dataToSend = {
-    title: addSong.title,
-    file_name: addSong.file_name,
-    artist: addSong.artist,
+    titre: addSong.titre,
+    description: addSong.description,
+    artiste: addSong.artiste,
   }
 
   const config = {
@@ -121,9 +121,9 @@ async function addSongToAPI() {
   }
   const {error} = await useAxios(authStore.authBaseUrl + 'songs/', config)
   if (!error.value) {
-    addSong.title = ""
-    addSong.file_name = ""
-    addSong.artist = ""
+    addSong.titre = ""
+    addSong.description = ""
+    addSong.artiste = ""
     this.$forceUpdate
     toast.success("Song added")
     await getSongs()
